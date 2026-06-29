@@ -8,3 +8,5 @@ Thumbs.db
 
 # Données personnelles (ne pas commiter des GPX privés)
 data/gpx/*.gpx
+node_modules/
+dist/
