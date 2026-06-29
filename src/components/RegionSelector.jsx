@@ -1,5 +1,5 @@
 import React from 'react'
-import { regions } from '../data/mockRoutes'
+import { regions } from '../data/regions'
 
 export default function RegionSelector({ selected, onChange }) {
   return (
@@ -8,11 +8,11 @@ export default function RegionSelector({ selected, onChange }) {
       <div className="region-grid">
         {regions.map((region) => (
           <button
-            key={region}
-            className={`region-btn ${selected === region ? 'active' : ''}`}
-            onClick={() => onChange(region)}
+            key={region.id}
+            className={`region-btn ${selected === region.id ? 'active' : ''}`}
+            onClick={() => onChange(region.id)}
           >
-            {region}
+            {region.name}
           </button>
         ))}
       </div>
