@@ -32,10 +32,8 @@ export default function MapView({ routes, selectedId, lastImportedId, regionCent
     <div className="map-wrapper">
       <MapContainer center={regionCenter || [46.8, 2.3]} zoom={9} style={{ width: '100%', height: '100%' }}>
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>'
-          subdomains="abcd"
-          maxZoom={20}
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
 
         <MapFocus focusRoute={focusRoute} regionCenter={regionCenter} />
