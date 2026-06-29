@@ -6,8 +6,8 @@ import DiscoveryStats from './components/DiscoveryStats'
 import RouteList from './components/RouteList'
 import RouteInfo from './components/RouteInfo'
 import MapView from './components/MapView'
-import { regions, DEFAULT_REGION, getRegion } from './data/regions'
-import { DEFAULT_ACTIVITY } from './data/activities'
+import { getRegion, DEFAULT_REGION } from './data/regions'
+import { getActivity, DEFAULT_ACTIVITY } from './data/activities'
 import {
   loadRoutes,
   addRoute,
@@ -60,63 +60,78 @@ export default function App() {
   }
 
   const selectedRoute = routes.find((r) => r.id === selectedId) || null
-  const regionCenter = getRegion(region).center
+  const regionData = getRegion(region)
+  const activityData = getActivity(activity)
 
   return (
     <div className="app">
       <aside className="sidebar">
-        <div className="sidebar-header">
-          <h1>🗺️ Carte Interactive</h1>
-          <p className="subtitle">Explore et garde la trace de tes parcours</p>
-        </div>
+        <header className="brand">
+          <span className="brand-mark" />
+          <span className="brand-name">Carte Interactive</span>
+        </header>
 
-        <section className="sidebar-section">
+        <div className="sidebar-body">
           <GpxImporter onImport={handleImport} />
-        </section>
 
-        <section className="sidebar-section">
-          <RegionSelector selected={region} onChange={setRegion} />
-        </section>
-
-        <section className="sidebar-section">
-          <ActivityWheel selected={activity} onChange={setActivity} />
-        </section>
-
-        <section className="sidebar-section">
-          <DiscoveryStats region={region} routes={routes} />
-        </section>
-
-        <section className="sidebar-section grow">
-          <div className="route-list-header">
-            <label className="section-label">📋 Mes parcours ({routes.length})</label>
-            {routes.length > 0 && (
-              <button className="reset-btn" onClick={handleReset}>
-                Réinitialiser
-              </button>
-            )}
+          <div className="controls">
+            <RegionSelector selected={region} onChange={setRegion} />
+            <ActivityWheel selected={activity} onChange={setActivity} />
           </div>
-          <RouteList
-            routes={routes}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
-            onDelete={handleDelete}
-          />
-        </section>
+
+          <section className="block">
+            <h2 className="block-title">Découverte — {regionData.name}</h2>
+            <DiscoveryStats region={region} routes={routes} />
+            <p className="block-note">Progression exploratoire estimée à partir des zones traversées.</p>
+          </section>
+
+          <section className="block grow">
+            <div className="block-head">
+              <h2 className="block-title">Mes parcours <span className="count">{routes.length}</span></h2>
+              {routes.length > 0 && (
+                <button className="reset-btn" onClick={handleReset}>Réinitialiser</button>
+              )}
+            </div>
+            <RouteList
+              routes={routes}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              onDelete={handleDelete}
+            />
+          </section>
+        </div>
       </aside>
 
       <main className="map-main">
-        <MapView
-          routes={routes}
-          selectedId={selectedId}
-          lastImportedId={lastImportedId}
-          regionCenter={regionCenter}
-          onSelect={setSelectedId}
-        />
-        {selectedRoute && (
-          <div className="route-info-overlay">
-            <RouteInfo route={selectedRoute} onClose={() => setSelectedId(null)} />
-          </div>
-        )}
+        <div className="map-topbar">
+          <span className="topbar-item">
+            <span className="topbar-key">Région</span>
+            <span className="topbar-val">{regionData.name}</span>
+          </span>
+          <span className="topbar-sep" />
+          <span className="topbar-item">
+            <span className="topbar-key">Activité</span>
+            <span className="topbar-val">
+              <span className="topbar-dot" style={{ background: activityData.color }} />
+              {activityData.label}
+            </span>
+          </span>
+        </div>
+
+        <div className="map-stage">
+          <MapView
+            routes={routes}
+            selectedId={selectedId}
+            lastImportedId={lastImportedId}
+            regionCenter={regionData.center}
+            onSelect={setSelectedId}
+          />
+          {selectedRoute && (
+            <div className="route-info-overlay">
+              <RouteInfo route={selectedRoute} onClose={() => setSelectedId(null)} />
+            </div>
+          )}
+        </div>
       </main>
     </div>
   )

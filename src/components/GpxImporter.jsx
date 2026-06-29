@@ -27,13 +27,12 @@ export default function GpxImporter({ onImport }) {
 
   return (
     <div className="gpx-importer">
-      <label className="section-label">📂 Importer un parcours</label>
       <button
         className="import-btn"
         onClick={() => inputRef.current?.click()}
         disabled={busy}
       >
-        {busy ? 'Lecture…' : '＋ Ajouter un fichier GPX'}
+        {busy ? 'Lecture…' : 'Importer un GPX'}
       </button>
       <input
         ref={inputRef}
@@ -46,7 +45,7 @@ export default function GpxImporter({ onImport }) {
           e.target.value = '' // permet de réimporter le même fichier
         }}
       />
-      {error && <p className="import-error">⚠️ {error}</p>}
+      {error && <p className="import-error">{error}</p>}
     </div>
   )
 }

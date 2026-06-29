@@ -1,20 +1,27 @@
 import React from 'react'
 import { regions } from '../data/regions'
 
+/**
+ * Sélecteur de région compact : un select natif stylisé.
+ */
 export default function RegionSelector({ selected, onChange }) {
   return (
-    <div className="region-selector">
-      <label className="section-label">📍 Région</label>
-      <div className="region-grid">
-        {regions.map((region) => (
-          <button
-            key={region.id}
-            className={`region-btn ${selected === region.id ? 'active' : ''}`}
-            onClick={() => onChange(region.id)}
-          >
-            {region.name}
-          </button>
-        ))}
+    <div className="field">
+      <label className="field-label" htmlFor="region-select">Région</label>
+      <div className="select-wrap">
+        <select
+          id="region-select"
+          className="select"
+          value={selected}
+          onChange={(e) => onChange(e.target.value)}
+        >
+          {regions.map((region) => (
+            <option key={region.id} value={region.id}>
+              {region.name}
+            </option>
+          ))}
+        </select>
+        <span className="select-chevron" aria-hidden="true">▾</span>
       </div>
     </div>
   )

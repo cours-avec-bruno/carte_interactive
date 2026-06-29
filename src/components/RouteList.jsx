@@ -1,24 +1,23 @@
 import React from 'react'
-import { getRegion } from '../data/regions'
 import { getActivity } from '../data/activities'
 
 /**
- * Liste des parcours sauvegardés avec actions Voir / Supprimer.
+ * Liste compacte des parcours sauvegardés, en lignes fines.
  */
 export default function RouteList({ routes, selectedId, onSelect, onDelete }) {
   if (routes.length === 0) {
     return (
-      <div className="route-list-empty">
-        Aucun parcours importé pour l'instant.
+      <div className="route-empty">
+        <p className="route-empty-title">Aucun parcours pour l'instant</p>
+        <p className="route-empty-sub">Importe un fichier GPX pour commencer à explorer ton territoire.</p>
       </div>
     )
   }
 
   return (
-    <div className="route-list">
+    <ul className="route-list">
       {routes.map((route) => {
         const activity = getActivity(route.activity)
-        const region = getRegion(route.region)
         const date = new Date(route.importDate).toLocaleDateString('fr-FR', {
           day: '2-digit',
           month: '2-digit',
@@ -26,41 +25,24 @@ export default function RouteList({ routes, selectedId, onSelect, onDelete }) {
         })
 
         return (
-          <div
+          <li
             key={route.id}
-            className={`route-card ${selectedId === route.id ? 'selected' : ''}`}
+            className={`route-row ${selectedId === route.id ? 'selected' : ''}`}
           >
-            <div className="route-card-top">
-              <span className="route-card-icon" style={{ color: activity.color }}>
-                {activity.icon}
+            <span className="route-rail" style={{ background: activity.color }} />
+            <div className="route-main">
+              <span className="route-name" title={route.fileName}>{route.name}</span>
+              <span className="route-meta">
+                {activity.label} · {route.distance} km · {date}
               </span>
-              <span className="route-card-name" title={route.fileName}>
-                {route.name}
-              </span>
             </div>
-
-            <div className="route-card-meta">
-              <span>{region.name}</span>
-              <span>·</span>
-              <span>{activity.label}</span>
+            <div className="route-actions">
+              <button className="link-btn" onClick={() => onSelect(route.id)}>Voir</button>
+              <button className="link-btn danger" onClick={() => onDelete(route.id)}>Supprimer</button>
             </div>
-
-            <div className="route-card-stats">
-              <span>📏 {route.distance} km</span>
-              <span>📅 {date}</span>
-            </div>
-
-            <div className="route-card-actions">
-              <button className="card-btn view" onClick={() => onSelect(route.id)}>
-                Voir
-              </button>
-              <button className="card-btn delete" onClick={() => onDelete(route.id)}>
-                Supprimer
-              </button>
-            </div>
-          </div>
+          </li>
         )
       })}
-    </div>
+    </ul>
   )
 }

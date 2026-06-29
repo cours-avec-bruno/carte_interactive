@@ -32,8 +32,10 @@ export default function MapView({ routes, selectedId, lastImportedId, regionCent
     <div className="map-wrapper">
       <MapContainer center={regionCenter || [46.8, 2.3]} zoom={9} style={{ width: '100%', height: '100%' }}>
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>'
+          subdomains="abcd"
+          maxZoom={20}
         />
 
         <MapFocus focusRoute={focusRoute} regionCenter={regionCenter} />
@@ -49,9 +51,10 @@ export default function MapView({ routes, selectedId, lastImportedId, regionCent
               positions={route.coordinates}
               pathOptions={{
                 color: activity.color,
-                weight: isSelected ? 7 : isLast ? 5 : 3,
-                opacity: isSelected || isLast ? 1 : 0.55,
-                dashArray: isLast && !isSelected ? '1, 0' : undefined,
+                weight: isSelected ? 6 : isLast ? 5 : 3.5,
+                opacity: isSelected ? 1 : isLast ? 0.9 : 0.45,
+                lineCap: 'round',
+                lineJoin: 'round',
               }}
               eventHandlers={{ click: () => onSelect(route.id) }}
             >

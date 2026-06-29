@@ -1,9 +1,10 @@
-// Activités disponibles, avec icône et couleur de tracé associée
+// Activités disponibles, avec icône et couleur de trace associée.
+// Couleurs pensées pour ressortir sur un fond de carte clair.
 export const activities = [
-  { id: 'velo',      label: 'Vélo',      icon: '🚴', color: '#e94560' },
-  { id: 'course',    label: 'Course',    icon: '🏃', color: '#00b4d8' },
-  { id: 'randonnee', label: 'Randonnée', icon: '🥾', color: '#06d6a0' },
-  { id: 'trail',     label: 'Trail',     icon: '⛰️', color: '#f9a826' },
+  { id: 'velo',      label: 'Vélo',      icon: '🚴', color: '#3A7CA5' }, // bleu
+  { id: 'course',    label: 'Course',    icon: '🏃', color: '#FC4C02' }, // orange
+  { id: 'randonnee', label: 'Randonnée', icon: '🥾', color: '#2F5D50' }, // vert
+  { id: 'trail',     label: 'Trail',     icon: '⛰️', color: '#A0522D' }, // terre
 ]
 
 export const DEFAULT_ACTIVITY = activities[0].id
