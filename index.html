@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carte Interactive – Trajets GPX</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Styles locaux -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <div id="app">
+    <aside id="sidebar">
+      <h1>Mes trajets</h1>
+      <div id="gpx-list">
+        <!-- Liste des trajets chargée dynamiquement -->
+        <p class="empty-msg">Aucun trajet chargé.</p>
+      </div>
+      <label id="upload-label" for="gpx-upload">
+        ＋ Ajouter un fichier GPX
+        <input type="file" id="gpx-upload" accept=".gpx" multiple />
+      </label>
+    </aside>
+
+    <main id="map-container">
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Scripts locaux -->
+  <script src="assets/js/gpx.js"></script>
+  <script src="assets/js/map.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>
