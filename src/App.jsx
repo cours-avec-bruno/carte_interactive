@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import GpxImporter from './components/GpxImporter'
+import StravaConnect from './components/StravaConnect'
 import RegionSelector from './components/RegionSelector'
 import ActivityWheel from './components/ActivityWheel'
 import DiscoveryStats from './components/DiscoveryStats'
@@ -10,11 +11,13 @@ import { getRegion, DEFAULT_REGION } from './data/regions'
 import { getActivity, DEFAULT_ACTIVITY } from './data/activities'
 import {
   loadRoutes,
+  saveRoutes,
   addRoute,
   removeRoute,
   clearRoutes,
   generateId,
 } from './utils/storage'
+import { getStravaStatus, mapStravaType } from './utils/stravaApi'
 
 export default function App() {
   const [routes, setRoutes] = useState([])
@@ -22,10 +25,26 @@ export default function App() {
   const [activity, setActivity] = useState(DEFAULT_ACTIVITY)
   const [selectedId, setSelectedId] = useState(null)
   const [lastImportedId, setLastImportedId] = useState(null)
+  const [stravaConnected, setStravaConnected] = useState(false)
+  const [stravaAutoOpen, setStravaAutoOpen] = useState(false)
 
-  // Persistance : on charge les parcours sauvegardés au démarrage
+  // Persistance + retour du flux OAuth Strava
   useEffect(() => {
     setRoutes(loadRoutes())
+
+    const params = new URLSearchParams(window.location.search)
+    const strava = params.get('strava')
+    if (strava) {
+      // on nettoie l'URL (retire ?strava=...)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+
+    if (strava === 'connected') {
+      setStravaConnected(true)
+      setStravaAutoOpen(true)
+    } else {
+      getStravaStatus().then(setStravaConnected)
+    }
   }, [])
 
   function handleImport(parsed) {
@@ -43,6 +62,37 @@ export default function App() {
     setRoutes(addRoute(route))
     setLastImportedId(route.id)
     setSelectedId(route.id)
+  }
+
+  function handleStravaImport(chosen) {
+    const existing = new Set(routes.map((r) => r.stravaId).filter(Boolean))
+    let list = loadRoutes()
+    let lastId = null
+
+    for (const a of chosen) {
+      if (existing.has(a.stravaId)) continue // évite les doublons
+      const route = {
+        id: generateId(),
+        stravaId: a.stravaId,
+        name: a.name,
+        fileName: `Strava #${a.stravaId}`,
+        importDate: a.date || new Date().toISOString(),
+        region,
+        activity: mapStravaType(a.sport_type, a.type),
+        coordinates: a.coordinates,
+        distance: a.distance,
+        pointCount: a.coordinates.length,
+      }
+      list = [...list, route]
+      lastId = route.id
+    }
+
+    saveRoutes(list)
+    setRoutes(list)
+    if (lastId) {
+      setLastImportedId(lastId)
+      setSelectedId(lastId)
+    }
   }
 
   function handleDelete(id) {
@@ -72,7 +122,15 @@ export default function App() {
         </header>
 
         <div className="sidebar-body">
-          <GpxImporter onImport={handleImport} />
+          <div className="import-group">
+            <GpxImporter onImport={handleImport} />
+            <StravaConnect
+              connected={stravaConnected}
+              autoOpen={stravaAutoOpen}
+              onConnectedChange={setStravaConnected}
+              onImport={handleStravaImport}
+            />
+          </div>
 
           <div className="controls">
             <RegionSelector selected={region} onChange={setRegion} />

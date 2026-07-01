@@ -107,6 +107,68 @@ body {
 .import-btn:disabled { opacity: 0.6; cursor: wait; }
 .import-error { color: var(--danger); font-size: 0.8rem; margin-top: 8px; }
 
+/* ── Groupe d'import (GPX + Strava) ───────────────────────── */
+.import-group { display: flex; flex-direction: column; gap: 10px; }
+
+/* ── Strava ───────────────────────────────────────────────── */
+.strava-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  background: #FC4C02; color: #fff; text-decoration: none;
+  padding: 11px 16px; border-radius: var(--radius);
+  font-size: 0.9rem; font-weight: 600;
+  transition: background 0.15s ease;
+}
+.strava-btn:hover { background: #e84402; }
+.strava-connected { display: flex; flex-direction: column; gap: 10px; }
+.strava-row { display: flex; align-items: center; justify-content: space-between; }
+.strava-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600; color: #FC4C02; }
+.strava-import-btn {
+  width: 100%;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 500; cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.strava-import-btn:hover { border-color: #D8D2C6; }
+
+.strava-modal-backdrop {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(23, 23, 23, 0.35);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.strava-modal {
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 14px;
+  width: 100%; max-width: 460px; max-height: 80vh;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-pop);
+}
+.strava-modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--border);
+}
+.strava-modal-head h3 { font-size: 1rem; font-weight: 600; }
+.strava-status { padding: 22px 20px; color: var(--text-2); font-size: 0.88rem; }
+.strava-status.error { color: var(--danger); }
+.strava-list { overflow-y: auto; padding: 8px 12px; }
+.strava-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 8px; border-radius: 8px; cursor: pointer;
+}
+.strava-item:hover { background: var(--surface-2); }
+.strava-item input { accent-color: var(--green); width: 15px; height: 15px; flex-shrink: 0; }
+.strava-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.strava-item-name { flex: 1; min-width: 0; font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.strava-item-meta { font-size: 0.75rem; color: var(--text-2); flex-shrink: 0; }
+.strava-modal-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 20px; border-top: 1px solid var(--border);
+}
+.strava-count { font-size: 0.8rem; color: var(--text-2); }
+.strava-modal-foot .import-btn { width: auto; padding: 9px 16px; }
+
 /* ── Champs (région / activité) ───────────────────────────── */
 .controls { display: flex; flex-direction: column; gap: 16px; }
 .field { display: flex; flex-direction: column; gap: 8px; }

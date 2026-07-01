@@ -10,3 +10,8 @@ Thumbs.db
 data/gpx/*.gpx
 node_modules/
 dist/
+
+# Secrets & déploiement (NE JAMAIS commiter)
+.env
+.env*.local
+.vercel
