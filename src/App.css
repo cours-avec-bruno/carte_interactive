@@ -106,6 +106,19 @@ body {
 .import-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 .import-btn:disabled { opacity: 0.6; cursor: wait; }
 .import-error { color: var(--danger); font-size: 0.8rem; margin-top: 8px; }
+.import-msg { color: var(--text-2); font-size: 0.78rem; margin-top: 8px; }
+
+.gpx-importer { display: flex; flex-direction: column; gap: 8px; }
+.import-sub-btn {
+  width: 100%;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 500; cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.import-sub-btn:hover:not(:disabled) { border-color: #D8D2C6; }
+.import-sub-btn:disabled { opacity: 0.6; cursor: wait; }
 
 /* ── Groupe d'import (GPX + Strava) ───────────────────────── */
 .import-group { display: flex; flex-direction: column; gap: 10px; }

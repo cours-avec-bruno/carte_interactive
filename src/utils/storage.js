@@ -18,12 +18,15 @@ export function loadRoutes() {
 
 /**
  * Écrase la liste complète des parcours.
+ * @returns {boolean} true si sauvegardé, false si échec (ex : quota dépassé).
  */
 export function saveRoutes(routes) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(routes))
+    return true
   } catch (err) {
     console.error('Écriture localStorage échouée :', err)
+    return false
   }
 }
 

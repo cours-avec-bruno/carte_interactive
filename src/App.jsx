@@ -12,7 +12,6 @@ import { getActivity, DEFAULT_ACTIVITY } from './data/activities'
 import {
   loadRoutes,
   saveRoutes,
-  addRoute,
   removeRoute,
   clearRoutes,
   generateId,
@@ -47,21 +46,45 @@ export default function App() {
     }
   }, [])
 
-  function handleImport(parsed) {
-    const route = {
-      id: generateId(),
-      name: parsed.name,
-      fileName: parsed.fileName,
-      importDate: new Date().toISOString(),
-      region,
-      activity,
-      coordinates: parsed.coordinates,
-      distance: parsed.distance,
-      pointCount: parsed.pointCount,
+  // Import d'un lot de parcours (fichiers, dossier, zip).
+  // Renvoie le nombre réellement sauvegardé (pour le message de l'importer).
+  function handleImportMany(parsedList) {
+    const previous = loadRoutes()
+    let list = previous
+    let lastId = null
+
+    for (const parsed of parsedList) {
+      const route = {
+        id: generateId(),
+        name: parsed.name,
+        fileName: parsed.fileName || parsed.name,
+        importDate: new Date().toISOString(),
+        region,
+        activity,
+        coordinates: parsed.coordinates,
+        distance: parsed.distance,
+        pointCount: parsed.pointCount,
+      }
+      list = [...list, route]
+      lastId = route.id
     }
-    setRoutes(addRoute(route))
-    setLastImportedId(route.id)
-    setSelectedId(route.id)
+
+    const ok = saveRoutes(list)
+    if (!ok) {
+      // Quota localStorage dépassé : on ne change rien et on prévient.
+      window.alert(
+        'Stockage plein : le navigateur ne peut pas garder autant de parcours. ' +
+          "Supprime quelques parcours avant d'en importer d'autres."
+      )
+      return 0
+    }
+
+    setRoutes(list)
+    if (lastId) {
+      setLastImportedId(lastId)
+      setSelectedId(lastId)
+    }
+    return parsedList.length
   }
 
   function handleStravaImport(chosen) {
@@ -123,7 +146,7 @@ export default function App() {
 
         <div className="sidebar-body">
           <div className="import-group">
-            <GpxImporter onImport={handleImport} />
+            <GpxImporter onImportMany={handleImportMany} />
             <StravaConnect
               connected={stravaConnected}
               autoOpen={stravaAutoOpen}

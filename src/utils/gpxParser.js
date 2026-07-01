@@ -1,5 +1,6 @@
 // Parsing de fichiers GPX dans le navigateur (DOMParser)
 import { totalDistance } from './distance'
+import { simplifyTrack } from './simplify'
 
 /**
  * Lit un fichier GPX (File) et renvoie une promesse résolue avec :
@@ -38,7 +39,7 @@ export function parseGpxString(xmlString, fallbackName = 'Parcours') {
     throw new Error('Aucun point GPS trouvé dans ce fichier GPX.')
   }
 
-  const coordinates = Array.from(pts).map((pt) => [
+  const fullTrack = Array.from(pts).map((pt) => [
     parseFloat(pt.getAttribute('lat')),
     parseFloat(pt.getAttribute('lon')),
   ])
@@ -47,10 +48,12 @@ export function parseGpxString(xmlString, fallbackName = 'Parcours') {
     xml.querySelector('trk > name, rte > name, metadata > name')?.textContent?.trim() ||
     fallbackName.replace(/\.gpx$/i, '')
 
+  // Distance calculée sur la trace complète (précis), puis on stocke une
+  // version simplifiée des coordonnées pour ménager le localStorage.
   return {
     name,
-    coordinates,
-    distance: totalDistance(coordinates),
-    pointCount: coordinates.length,
+    coordinates: simplifyTrack(fullTrack),
+    distance: totalDistance(fullTrack),
+    pointCount: fullTrack.length,
   }
 }
